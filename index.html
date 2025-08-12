@@ -5,19 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tsurus Sushi Bar - Sistema de Entradas</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            background-image: url('https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-color: #f5f0e6;
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Japanese decorative elements */
+        .japan-decoration {
+            position: absolute;
+            z-index: 0;
+        }
+
+        .cherry-blossom {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, #ffb7c5, #ff9eb7 40%, transparent 60%);
+            border-radius: 50%;
+            opacity: 0.7;
+            filter: blur(1px);
+            animation: float 15s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        .bamboo {
+            position: absolute;
+            height: 150px;
+            width: 12px;
+            background: linear-gradient(to right, #5a7247, #8a9b6e, #5a7247);
+            transform: rotate(15deg);
+            border-radius: 6px;
+        }
+
+        .bamboo::before, .bamboo::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            background: #5a7247;
+            border-radius: 3px;
         }
         .title-font {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Noto Serif JP', serif;
         }
         .tab-content {
             display: none;
@@ -29,20 +68,28 @@
             border-bottom: 3px solid #ef4444;
             color: #ef4444;
         }
-        .sushi-pattern {
-            background-color: rgba(255, 255, 255, 0.9);
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ef4444' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        .main-container {
+            background-color: #fff9f0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body class="py-8 px-4">
+    <!-- Japanese decorative elements -->
+    <div class="cherry-blossom" style="left: 10%; top: 20%;"></div>
+    <div class="cherry-blossom" style="left: 25%; top: 40%; animation-delay: -5s;"></div>
+    <div class="cherry-blossom" style="left: 70%; top: 15%; animation-delay: -8s;"></div>
+    <div class="cherry-blossom" style="left: 85%; top: 30%; animation-delay: -12s;"></div>
+    
+    <div class="bamboo" style="right: -50px; top: 100px;"></div>
+    <div class="bamboo" style="right: -30px; top: 300px; height: 200px;"></div>
     <div class="max-w-4xl mx-auto">
         <div class="text-center mb-8">
-            <h1 class="title-font text-4xl md:text-5xl font-bold text-white mb-2">Tsurus Sushi Bar</h1>
-            <p class="text-white text-lg">Sistema de Controle de Entradas</p>
+            <h1 class="title-font text-4xl md:text-5xl font-bold text-black mb-2">Tsurus Sushi Bar</h1>
+            <p class="text-black text-lg">Sistema de Controle de Entradas</p>
         </div>
 
-        <div class="bg-white rounded-lg shadow-xl overflow-hidden sushi-pattern">
+        <div class="rounded-lg overflow-hidden main-container">
             <!-- Tabs -->
             <div class="flex border-b">
                 <button class="tab-button flex-1 py-4 px-6 text-center font-medium text-gray-700 hover:text-red-500 active" data-tab="reservations">
@@ -58,7 +105,7 @@
 
             <!-- Reservations Tab -->
             <div id="reservations" class="tab-content active p-6">
-                <h2 class="title-font text-2xl font-semibold mb-6 text-gray-800">Gerenciar Reservas</h2>
+                <h2 class="title-font text-2xl font-semibold mb-6 text-black">Gerenciar Reservas</h2>
                 
                 <form id="reservation-form" class="mb-8">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -99,7 +146,7 @@
 
             <!-- Queue Tab -->
             <div id="queue" class="tab-content p-6">
-                <h2 class="title-font text-2xl font-semibold mb-6 text-gray-800">Controle de Fila</h2>
+                <h2 class="title-font text-2xl font-semibold mb-6 text-black">Controle de Fila</h2>
                 
                 <form id="queue-form" class="mb-8">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -136,7 +183,7 @@
 
             <!-- Entries Tab -->
             <div id="entries" class="tab-content p-6">
-                <h2 class="title-font text-2xl font-semibold mb-6 text-gray-800">Controle de Entradas</h2>
+                <h2 class="title-font text-2xl font-semibold mb-6 text-black">Controle de Entradas</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div class="bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
