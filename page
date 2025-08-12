@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tsurus Sushi Bar - Sistema de Entradas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tab-button.active {
+            border-bottom: 3px solid #ef4444;
+            color: #ef4444;
+        }
+        .sushi-pattern {
+            background-color: rgba(255, 255, 255, 0.9);
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ef4444' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="title-font text-4xl md:text-5xl font-bold text-white mb-2">Tsurus Sushi Bar</h1>
+            <p class="text-white text-lg">Sistema de Controle de Entradas</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden sushi-pattern">
+            <!-- Tabs -->
+            <div class="flex border-b">
+                <button class="tab-button flex-1 py-4 px-6 text-center font-medium text-gray-700 hover:text-red-500 active" data-tab="reservations">
+                    <i class="fas fa-calendar-check mr-2"></i>Reservas
+                </button>
+                <button class="tab-button flex-1 py-4 px-6 text-center font-medium text-gray-700 hover:text-red-500" data-tab="queue">
+                    <i class="fas fa-clock mr-2"></i>Fila
+                </button>
+                <button class="tab-button flex-1 py-4 px-6 text-center font-medium text-gray-700 hover:text-red-500" data-tab="entries">
+                    <i class="fas fa-door-open mr-2"></i>Entradas
+                </button>
+            </div>
+
+            <!-- Reservations Tab -->
+            <div id="reservations" class="tab-content active p-6">
+                <h2 class="title-font text-2xl font-semibold mb-6 text-gray-800">Gerenciar Reservas</h2>
+                
+                <form id="reservation-form" class="mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Nome do Cliente</label>
+                            <input type="text" id="reservation-name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Número de Pessoas</label>
+                            <input type="number" id="reservation-people" min="1" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Número da Mesa</label>
+                            <input type="number" id="reservation-table" min="1" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="mt-6 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-6 rounded-lg transition duration-300">
+                        <i class="fas fa-plus mr-2"></i>Adicionar Reserva
+                    </button>
+                </form>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="py-3 px-4 text-left">Cliente</th>
+                                <th class="py-3 px-4 text-left">Pessoas</th>
+                                <th class="py-3 px-4 text-left">Mesa</th>
+                                <th class="py-3 px-4 text-left">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservations-list" class="divide-y divide-gray-200">
+                            <!-- Reservations will be added here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Queue Tab -->
+            <div id="queue" class="tab-content p-6">
+                <h2 class="title-font text-2xl font-semibold mb-6 text-gray-800">Controle de Fila</h2>
+                
+                <form id="queue-form" class="mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Nome do Cliente</label>
+                            <input type="text" id="queue-name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Número de Pessoas</label>
+                            <input type="number" id="queue-people" min="1" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="mt-6 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-6 rounded-lg transition duration-300">
+                        <i class="fas fa-plus mr-2"></i>Adicionar à Fila
+                    </button>
+                </form>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="py-3 px-4 text-left">Cliente</th>
+                                <th class="py-3 px-4 text-left">Pessoas</th>
+                                <th class="py-3 px-4 text-left">Tempo na Fila</th>
+                                <th class="py-3 px-4 text-left">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="queue-list" class="divide-y divide-gray-200">
+                            <!-- Queue items will be added here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Entries Tab -->
+            <div id="entries" class="tab-content p-6">
+                <h2 class="title-font text-2xl font-semibold mb-6 text-gray-800">Controle de Entradas</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
+                        <h3 class="title-font text-xl font-medium mb-4">Homens</h3>
+                        <div id="men-count" class="text-4xl font-bold mb-4">0</div>
+                        <div class="flex justify-center space-x-4">
+                            <button id="men-decrement" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full transition duration-300">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button id="men-increment" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
+                        <h3 class="title-font text-xl font-medium mb-4">Mulheres</h3>
+                        <div id="women-count" class="text-4xl font-bold mb-4">0</div>
+                        <div class="flex justify-center space-x-4">
+                            <button id="women-decrement" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full transition duration-300">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button id="women-increment" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
+                        <h3 class="title-font text-xl font-medium mb-4">Infantil</h3>
+                        <div id="kids-count" class="text-4xl font-bold mb-4">0</div>
+                        <div class="flex justify-center space-x-4">
+                            <button id="kids-decrement" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full transition duration-300">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button id="kids-increment" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h3 class="title-font text-xl font-medium mb-4 text-center">Total de Entradas</h3>
+                    <div id="total-count" class="text-5xl font-bold text-center mb-2">0</div>
+                    <div id="fifty-reached" class="text-center text-green-600 font-medium">
+                        <!-- Message will appear when 50 people are reached -->
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="title-font text-xl font-medium mb-4">Histórico de 50+ Pessoas</h3>
+                    <ul id="fifty-history" class="space-y-2">
+                        <!-- History will be added here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // Remove active class from all buttons and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                button.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Reservations functionality
+        const reservationForm = document.getElementById('reservation-form');
+        const reservationsList = document.getElementById('reservations-list');
+
+        reservationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('reservation-name').value;
+            const people = document.getElementById('reservation-people').value;
+            const table = document.getElementById('reservation-table').value;
+            
+            const reservationItem = document.createElement('tr');
+            reservationItem.className = 'hover:bg-gray-50';
+            reservationItem.innerHTML = `
+                <td class="py-3 px-4">${name}</td>
+                <td class="py-3 px-4">${people}</td>
+                <td class="py-3 px-4">${table}</td>
+                <td class="py-3 px-4">
+                    <button class="remove-reservation bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm">
+                        <i class="fas fa-trash-alt mr-1"></i>Remover
+                    </button>
+                </td>
+            `;
+            
+            reservationsList.appendChild(reservationItem);
+            
+            // Clear form
+            reservationForm.reset();
+            
+            // Add event listener to the new delete button
+            reservationItem.querySelector('.remove-reservation').addEventListener('click', function() {
+                reservationItem.remove();
+            });
+        });
+
+        // Queue functionality
+        const queueForm = document.getElementById('queue-form');
+        const queueList = document.getElementById('queue-list');
+        let queueTimers = {};
+
+        queueForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('queue-name').value;
+            const people = document.getElementById('queue-people').value;
+            const id = Date.now(); // Unique ID for each queue item
+            
+            const queueItem = document.createElement('tr');
+            queueItem.className = 'hover:bg-gray-50';
+            queueItem.setAttribute('data-id', id);
+            queueItem.innerHTML = `
+                <td class="py-3 px-4">${name}</td>
+                <td class="py-3 px-4">${people}</td>
+                <td class="py-3 px-4 time-counter" data-start="${new Date().toISOString()}">00:00:00</td>
+                <td class="py-3 px-4">
+                    <button class="entered-button bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded text-sm">
+                        Entrou
+                    </button>
+                </td>
+            `;
+            
+            queueList.appendChild(queueItem);
+            
+            // Start timer for this item
+            startQueueTimer(id);
+            
+            // Clear form
+            queueForm.reset();
+            
+            // Add event listener to the entered button
+            queueItem.querySelector('.entered-button').addEventListener('click', function() {
+                clearInterval(queueTimers[id]);
+                delete queueTimers[id];
+                queueItem.remove();
+            });
+        });
+
+        function startQueueTimer(id) {
+            const queueItem = document.querySelector(`tr[data-id="${id}"]`);
+            const timeCounter = queueItem.querySelector('.time-counter');
+            const startTime = new Date(timeCounter.getAttribute('data-start'));
+            
+            queueTimers[id] = setInterval(() => {
+                const now = new Date();
+                const diff = now - startTime;
+                
+                const hours = Math.floor(diff / (1000 * 60 * 60)).toString().padStart(2, '0');
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+                
+                timeCounter.textContent = `${hours}:${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        // Entries functionality
+        let menCount = 0;
+        let womenCount = 0;
+        let kidsCount = 0;
+        let fiftyReached = false;
+        const fiftyHistory = [];
+
+        const menIncrement = document.getElementById('men-increment');
+        const menDecrement = document.getElementById('men-decrement');
+        const womenIncrement = document.getElementById('women-increment');
+        const womenDecrement = document.getElementById('women-decrement');
+        const kidsIncrement = document.getElementById('kids-increment');
+        const kidsDecrement = document.getElementById('kids-decrement');
+        const menDisplay = document.getElementById('men-count');
+        const womenDisplay = document.getElementById('women-count');
+        const kidsDisplay = document.getElementById('kids-count');
+        const totalDisplay = document.getElementById('total-count');
+        const fiftyMessage = document.getElementById('fifty-reached');
+        const fiftyHistoryList = document.getElementById('fifty-history');
+
+        function updateCounts() {
+            menDisplay.textContent = menCount;
+            womenDisplay.textContent = womenCount;
+            kidsDisplay.textContent = kidsCount;
+            
+            const total = menCount + womenCount + kidsCount;
+            totalDisplay.textContent = total;
+            
+            // Check if we've reached 50 people
+            if (total >= 50 && !fiftyReached) {
+                fiftyReached = true;
+                const now = new Date();
+                const timeString = now.toLocaleTimeString();
+                const dateString = now.toLocaleDateString();
+                
+                fiftyMessage.textContent = `50 pessoas alcançadas às ${timeString}`;
+                
+                // Add to history
+                const historyItem = document.createElement('li');
+                historyItem.className = 'bg-gray-100 p-3 rounded-lg';
+                historyItem.textContent = `50 pessoas alcançadas em ${dateString} às ${timeString}`;
+                fiftyHistoryList.appendChild(historyItem);
+                
+                fiftyHistory.push({ date: dateString, time: timeString });
+            } else if (total < 50) {
+                fiftyReached = false;
+                fiftyMessage.textContent = '';
+            }
+        }
+
+        menIncrement.addEventListener('click', () => {
+            menCount++;
+            updateCounts();
+        });
+
+        menDecrement.addEventListener('click', () => {
+            if (menCount > 0) {
+                menCount--;
+                updateCounts();
+            }
+        });
+
+        womenIncrement.addEventListener('click', () => {
+            womenCount++;
+            updateCounts();
+        });
+
+        womenDecrement.addEventListener('click', () => {
+            if (womenCount > 0) {
+                womenCount--;
+                updateCounts();
+            }
+        });
+
+        kidsIncrement.addEventListener('click', () => {
+            kidsCount++;
+            updateCounts();
+        });
+
+        kidsDecrement.addEventListener('click', () => {
+            if (kidsCount > 0) {
+                kidsCount--;
+                updateCounts();
+            }
+        });
+    </script>
+</body>
+</html>
